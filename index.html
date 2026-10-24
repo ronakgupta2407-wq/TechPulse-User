@@ -1,0 +1,664 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080d1b">
+
+  <title>ACM TechPulse 2026 | Treasure Hunt</title>
+
+  <link rel="stylesheet" href="./style.css?v=20261024-9">
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Stage 3 random image styling -->
+  <style>
+    .stage3-image-panel {
+      width: 100%;
+      max-width: 600px;
+      margin: 24px auto;
+      text-align: center;
+    }
+
+    .stage3-image-panel.hidden {
+      display: none !important;
+    }
+
+    .stage3-image-label {
+      color: #60d8ff;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin: 0 0 14px;
+    }
+
+    .stage3-image-container {
+      width: 100%;
+      min-height: 180px;
+      max-height: 420px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      border: 1px solid rgba(99, 139, 255, 0.45);
+      border-radius: 16px;
+      background: #080d1b;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .stage3-image-container img {
+      display: block;
+      max-width: 100%;
+      width: 100%;
+      max-height: 390px;
+      object-fit: contain;
+      border-radius: 10px;
+    }
+
+    .stage3-image-status {
+      color: #aab8d5;
+      font-size: 13px;
+      line-height: 1.6;
+      margin: 12px 0 0;
+    }
+
+    @media (max-width: 600px) {
+      .stage3-image-panel {
+        margin: 18px auto;
+      }
+
+      .stage3-image-container {
+        min-height: 150px;
+        padding: 6px;
+      }
+
+      .stage3-image-container img {
+        max-height: 300px;
+      }
+    }
+  </style>
+  <script src="app.js?v=20261024-7" defer></script>
+</head>
+
+<body>
+  <!-- Background -->
+  <div class="background-glow glow-one"></div>
+  <div class="background-glow glow-two"></div>
+  <div class="background-grid"></div>
+
+  <!-- Header -->
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="ACM TechPulse home">
+      <img
+        class="brand-logo"
+        src="./logo%20acm.jpeg"
+        alt="ACM logo"
+      >
+      <span class="brand-name">ACM <span>TECHPULSE</span></span>
+    </a>
+
+    <div class="event-label">
+      <span class="status-dot"></span>
+      TREASURE HUNT 2026
+    </div>
+  </header>
+
+  <main class="main-container">
+
+    <!-- GOOGLE LOGIN -->
+    <section id="login" class="screen active">
+      <div class="login-layout">
+
+        <div class="login-intro">
+          <span class="eyebrow">
+            <span class="eyebrow-line"></span>
+            ACM STUDENT CHAPTER
+          </span>
+
+          <h1 class="hero-title">
+            The hunt<br>
+            <span class="gradient-text">begins here.</span>
+          </h1>
+
+          <p class="hero-description">
+            Decode the clues, unlock the stages, and discover
+            the treasure. Your journey starts with a single step.
+          </p>
+
+          <div class="feature-row">
+            <div class="feature">
+              <span class="feature-icon">
+                <i data-lucide="puzzle"></i>
+              </span>
+              Four stages
+            </div>
+
+            <div class="feature">
+              <span class="feature-icon">
+                <i data-lucide="headphones"></i>
+              </span>
+              Audio clues
+            </div>
+
+            <div class="feature">
+              <span class="feature-icon">
+                <i data-lucide="trophy"></i>
+              </span>
+              Find the treasure
+            </div>
+          </div>
+        </div>
+
+        <div class="panel login-card">
+          <div class="panel-symbol">
+            <i data-lucide="fingerprint"></i>
+          </div>
+
+          <span class="section-kicker">PARTICIPANT ACCESS</span>
+          <h2>Welcome, explorer.</h2>
+
+          <p class="muted-text">
+            Sign in with Google to register your team and enter the hunt.
+          </p>
+
+          <button
+            type="button"
+            id="googleLoginBtn"
+            class="button button-google button-full"
+          >
+            <svg class="google-icon" viewBox="0 0 48 48" aria-hidden="true">
+              <path fill="#EA4335"
+                d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+                transform="translate(0 4)"/>
+              <path fill="#4285F4"
+                d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.73 7.18l7.63 5.91c4.46-4.12 7.14-10.2 7.14-17.56z"/>
+              <path fill="#FBBC05"
+                d="M10.53 28.59a14.4 14.4 0 0 1 0-9.18l-7.98-6.19a23.9 23.9 0 0 0 0 21.56l7.98-6.19z"
+                transform="translate(0 -2)"/>
+              <path fill="#34A853"
+                d="M24 48c6.48 0 11.93-2.13 15.9-5.89l-7.63-5.91c-2.12 1.42-4.84 2.26-8.27 2.26-6.26 0-11.57-4.22-13.46-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+                transform="translate(0 -2)"/>
+            </svg>
+            <span>Continue with Google</span>
+          </button>
+
+          <div id="loginMessage" class="message hidden" role="alert"></div>
+
+          <div class="security-note">
+            <i data-lucide="shield-check"></i>
+            Secure Google authentication
+          </div>
+
+          <p class="login-footer">
+            ACM TechPulse 2026 · Official Treasure Hunt
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TEAM REGISTRATION -->
+    <section id="teamRegistration" class="screen hidden">
+      <div class="stage-page">
+        <div class="panel stage-panel">
+          <div class="stage-icon-box">
+            <i data-lucide="users"></i>
+          </div>
+
+          <span class="section-kicker">FIRST STEP</span>
+          <h1 class="stage-title">Register your team</h1>
+
+          <p class="stage-description">
+            Choose your team's name before beginning the treasure hunt.
+          </p>
+
+          <div class="code-divider">
+            <span></span>
+            <i data-lucide="users-round"></i>
+            <span></span>
+          </div>
+
+          <form id="teamRegistrationForm" class="code-form">
+            <label for="teamNameInput">TEAM NAME</label>
+
+            <input
+              type="text"
+              id="teamNameInput"
+              class="code-input"
+              placeholder="Your team name"
+              minlength="2"
+              maxlength="60"
+              autocomplete="organization"
+              required
+              style="font-size:16px;letter-spacing:normal"
+            >
+
+            <p class="input-hint">
+              Choose a name between 2 and 60 characters.
+            </p>
+
+            <button
+              type="submit"
+              id="registerTeamBtn"
+              class="button button-primary button-full"
+            >
+              Register Team
+              <i data-lucide="arrow-right"></i>
+            </button>
+
+            <div
+              id="teamRegistrationMessage"
+              class="message hidden"
+              role="alert"
+            ></div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOME DASHBOARD -->
+    <section id="home" class="screen hidden">
+
+      <div class="welcome-row">
+        <div>
+          <span class="eyebrow">
+            <span class="eyebrow-line"></span>
+            YOUR MISSION
+          </span>
+
+          <h1 class="page-title">Ready to explore?</h1>
+
+          <p class="muted-text">
+            Every clue takes you closer to the treasure.
+          </p>
+        </div>
+
+        <div class="user-chip">
+          <span class="user-avatar">
+            <i data-lucide="user-round"></i>
+          </span>
+          <span id="userName">Participant</span>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+
+        <div class="panel hunt-card">
+          <div class="hunt-card-top">
+            <span class="subtle-label">ACM TECHPULSE 2026</span>
+            <span class="pill">
+              <span class="status-dot"></span>
+              MISSION ACTIVE
+            </span>
+          </div>
+
+          <div class="hunt-illustration">
+            <div class="orbit orbit-one"></div>
+            <div class="orbit orbit-two"></div>
+
+            <span class="floating-star star-one">✦</span>
+            <span class="floating-star star-two">✧</span>
+
+            <div class="illustration-icon">
+              <i data-lucide="compass"></i>
+            </div>
+          </div>
+
+          <span class="section-kicker">THE ADVENTURE AWAITS</span>
+          <h2>Find the hidden treasure.</h2>
+
+          <p class="muted-text">
+            Solve four stages, enter the correct codes, and unlock
+            the final treasure.
+          </p>
+
+          <button
+            type="button"
+            id="enterHuntBtn"
+            class="button button-primary"
+          >
+            Enter the Hunt
+            <i data-lucide="arrow-up-right"></i>
+          </button>
+        </div>
+
+        <div class="panel progress-card">
+          <div class="card-heading">
+            <div>
+              <span class="section-kicker">YOUR JOURNEY</span>
+              <h3>Stage progress</h3>
+            </div>
+
+            <div class="progress-badge">
+              <i data-lucide="chart-no-axes-column-increasing"></i>
+            </div>
+          </div>
+
+          <div class="progress-numbers">
+            <span id="progressCount" class="progress-big">0 / 4</span>
+            <span class="muted-text">stages completed</span>
+          </div>
+
+          <div class="progress-track">
+            <div id="progressBar" class="progress-fill"></div>
+          </div>
+
+          <ul id="stageList" class="stage-list"></ul>
+
+          <div class="progress-footnote">
+            <i data-lucide="info"></i>
+            <span>Complete each stage in order to unlock the next one.</span>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" id="logoutBtn" class="text-button">
+        Sign out
+      </button>
+    </section>
+
+    <!-- STAGE SCREEN -->
+    <section id="stage" class="screen hidden">
+      <div class="stage-page">
+
+        <button type="button" id="backHomeBtn" class="back-link">
+          <i data-lucide="arrow-left"></i>
+          Back to dashboard
+        </button>
+
+        <div class="stage-progress-header">
+          <span class="stage-counter">
+            STAGE <span id="stageNumber">01</span> / 05
+          </span>
+
+          <span class="subtle-label">TREASURE HUNT</span>
+        </div>
+
+        <div class="stage-progress-track">
+          <div id="stageProgressBar" class="stage-progress-fill"></div>
+        </div>
+
+        <div class="panel stage-panel">
+
+          <div class="stage-icon-box">
+            <i id="stageIcon" data-lucide="compass"></i>
+          </div>
+
+          <span class="section-kicker">YOUR NEXT CHALLENGE</span>
+
+          <h1 id="stageTitle" class="stage-title">The First Gate</h1>
+
+          <p id="stageDescription" class="stage-description">
+            Every great journey starts with a discovery.
+          </p>
+
+          <!-- STAGE 3 RANDOM IMAGE PANEL -->
+          <section
+            id="stage3ImagePanel"
+            class="stage3-image-panel hidden"
+            aria-label="Stage 3 visual clue"
+          >
+            <p class="stage3-image-label">
+              STAGE 03 · VISUAL CLUE
+            </p>
+
+            <div class="stage3-image-container">
+              <img
+                id="stage3RandomImage"
+                src=""
+                alt="Random Stage 3 visual clue"
+                decoding="async"
+              >
+            </div>
+
+            <p
+              id="stage3ImageStatus"
+              class="stage3-image-status"
+              aria-live="polite"
+            >
+              Your visual clue will appear here.
+            </p>
+          </section>
+
+          <!-- AUDIO SECTION: STAGE 2 -->
+          <section
+            id="clueAudioPanel"
+            class="clue-audio-panel"
+            aria-label="Stage 2 audio clues"
+          >
+
+            <!-- RANDOM SUPABASE AUDIO -->
+            <div id="randomAudioPanel">
+              <div class="clue-audio-header">
+                <div class="clue-audio-icon">
+                  <i data-lucide="radio"></i>
+                </div>
+
+                <div class="clue-audio-heading">
+                  <h3>Random Audio</h3>
+                  <p>A random audio clue is selected when Stage 2 opens.</p>
+                </div>
+              </div>
+
+              <audio
+                id="randomAudioPlayer"
+                controls
+                preload="metadata"
+                style="width:100%"
+              >
+                Your browser does not support audio playback.
+              </audio>
+
+              <p
+                id="randomAudioStatus"
+                class="clue-audio-status"
+                aria-live="polite"
+              >
+                A random audio clue will load when Stage 2 opens.
+              </p>
+            </div>
+
+            <div class="code-divider">
+              <span></span>
+              <i data-lucide="headphones"></i>
+              <span></span>
+            </div>
+
+            <!-- LOCAL AUDIO CLUES -->
+            <div id="localAudioCluesPanel">
+              <div class="clue-audio-header">
+                <div class="clue-audio-icon">
+                  <i data-lucide="list-music"></i>
+                </div>
+
+                <div class="clue-audio-heading">
+                  <h3>Audio Clues</h3>
+                  <p>Choose a clue from the local Audio folder.</p>
+                </div>
+              </div>
+
+              <span class="clue-audio-tag">
+                <span class="status-dot"></span>
+                LOCAL AUDIO FILES
+              </span>
+
+              <label for="clueAudioSelect">SELECT AUDIO CLUE</label>
+
+              <select id="clueAudioSelect" class="audio-clue-select">
+                <option value="">Choose an audio clue</option>
+                <option value="./Audio/Clue-Audio-1.wav">Audio Clue 1</option>
+                <option value="./Audio/Clue-Audio-2.wav">Audio Clue 2</option>
+                <option value="./Audio/Clue-Audio-3.wav">Audio Clue 3</option>
+                <option value="./Audio/Clue-Audio-4.wav">Audio Clue 4</option>
+                <option value="./Audio/Clue-Audio-5.wav">Audio Clue 5</option>
+                <option value="./Audio/Clue-Audio-6.wav">Audio Clue 6</option>
+                <option value="./Audio/Clue-Audio-7.wav">Audio Clue 7</option>
+                <option value="./Audio/Clue-Audio-8.wav">Audio Clue 8</option>
+                <option value="./Audio/Clue-Audio-9.wav">Audio Clue 9</option>
+                <option value="./Audio/Clue-Audio-10.wav">Audio Clue 10</option>
+              </select>
+
+              <audio
+                id="localClueAudioPlayer"
+                controls
+                preload="none"
+                style="width:100%"
+              >
+                Your browser does not support audio playback.
+              </audio>
+
+              <p
+                id="localClueAudioStatus"
+                class="clue-audio-status"
+                aria-live="polite"
+              >
+                Select a clue to listen.
+              </p>
+            </div>
+
+            <div class="clue-audio-footer">
+              <i data-lucide="info"></i>
+              <span>
+                Play the random audio or select a specific clue below.
+              </span>
+            </div>
+          </section>
+
+          <div class="code-divider">
+            <span></span>
+            <i data-lucide="key-round"></i>
+            <span></span>
+          </div>
+
+          <!-- STAGE CODE FORM -->
+          <form id="codeForm" class="code-form">
+            <label for="stageCode">ENTER THE 4-DIGIT CODE</label>
+
+            <input
+              type="text"
+              id="stageCode"
+              class="code-input"
+              placeholder="0000"
+              inputmode="numeric"
+              pattern="[0-9]{4}"
+              maxlength="4"
+              autocomplete="off"
+              required
+            >
+
+            <p class="input-hint">
+              Enter the code you discovered to unlock the stage.
+            </p>
+
+            <button
+              type="submit"
+              id="submitCodeBtn"
+              class="button button-primary button-full"
+            >
+              Unlock Stage
+              <i data-lucide="arrow-right"></i>
+            </button>
+
+            <div
+              id="stageMessage"
+              class="message hidden"
+              role="status"
+              aria-live="polite"
+            ></div>
+          </form>
+
+          <div class="stage-bottom-note">
+            <i data-lucide="shield-check"></i>
+            Your progress is saved to your team account.
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- TREASURE SCREEN -->
+    <section id="vault" class="screen hidden">
+      <div class="treasure-page">
+
+        <div class="treasure-confetti">✦ ✧ ✦ ✧ ✦</div>
+
+        <span class="section-kicker">MISSION COMPLETED</span>
+
+        <h1 id="vaultTitle" class="treasure-title">
+          The treasure is yours!
+        </h1>
+
+        <p id="vaultDescription" class="treasure-description">
+          Congratulations! You completed all four stages of
+          ACM TechPulse 2026.
+        </p>
+
+        <div id="vaultVisual" class="treasure-visual treasure-open">
+          <div class="treasure-glow"></div>
+          <div class="treasure-shadow"></div>
+
+          <div class="treasure-chest">
+            <div class="chest-lid">
+              <div class="chest-lid-top"></div>
+              <div class="chest-band"></div>
+            </div>
+
+            <div class="chest-body">
+              <div class="chest-treasure" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <div class="chest-band chest-band-body"></div>
+            </div>
+
+            <div class="chest-lock">
+              <i data-lucide="lock-keyhole"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="treasure-complete">
+          <i data-lucide="trophy"></i>
+          ALL FOUR STAGES COMPLETED
+        </div>
+
+        <button type="button" id="restartBtn" class="button button-primary">
+          Return to Dashboard
+          <i data-lucide="arrow-right"></i>
+        </button>
+
+        <button type="button" id="replayTreasureBtn" class="text-button">
+          Replay treasure animation
+        </button>
+
+        <button type="button" id="logoutBtnVault" class="text-button">
+          Sign out
+        </button>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <span>ACM TECHPULSE 2026</span>
+    <span>THINK · DECODE · DISCOVER</span>
+    <span>Developed by Ronak Gupta · Computer Science And Business System · 2nd Year</span>
+  </footer>
+
+  <!-- VAULT LOGOUT BUTTON HANDLER -->
+  <script>
+    document.getElementById("logoutBtnVault")
+      ?.addEventListener("click", () => {
+        if (typeof window.logoutUser === "function") {
+          window.logoutUser();
+        }
+      });
+  </script>
+</body>
+</html>
